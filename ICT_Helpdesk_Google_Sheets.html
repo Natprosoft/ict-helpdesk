@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ICT Helpdesk</title>
+  <style>
+    :root { --navy:#11263f; --blue:#1877d1; --light:#f3f7fb; --red:#d5394d; --green:#18875a; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family:Arial,Helvetica,sans-serif; color:#172436; background:var(--light); }
+    header { background:var(--navy); color:#fff; padding:1rem max(1rem,calc((100% - 1050px)/2)); display:flex; align-items:center; justify-content:space-between; gap:1rem; }
+    .brand { font-size:1.2rem; font-weight:800; }.brand span{color:#70c8ff} nav{display:flex;gap:.5rem}
+    nav button { background:transparent; border:1px solid #ffffff66; color:white; padding:.55rem .75rem; border-radius:8px; cursor:pointer; font-weight:700; }
+    nav button.active { background:white; color:var(--navy); }
+    main { width:min(1050px,94vw); margin:2rem auto 4rem; }
+    .view { display:none; }.view.active { display:block; }
+    .intro { margin-bottom:1.25rem; }.intro h1{margin:0 0 .35rem;font-size:clamp(1.65rem,5vw,2.3rem)}.intro p{margin:0;color:#5d6b7b}
+    .panel { background:#fff; border-radius:14px; padding:clamp(1.1rem,4vw,2rem); box-shadow:0 5px 22px #1f3b5b14; }
+    form { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:1rem; } .full{grid-column:1/-1}
+    label { display:grid; gap:.4rem; font-size:.88rem; font-weight:700; color:#3d4d60; }
+    input,select,textarea { font:inherit; color:#172436; border:1px solid #cbd5e1; border-radius:8px; padding:.7rem; width:100%; background:#fff; }
+    textarea { min-height:115px; resize:vertical; } button.primary{border:0;border-radius:8px;background:var(--blue);color:#fff;font-weight:800;padding:.8rem 1.15rem;cursor:pointer;font-size:1rem}.success{color:var(--green);font-weight:700;margin:0}
+    .stats { display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin:1.3rem 0;}.stat{background:#fff;border-radius:12px;padding:1rem;box-shadow:0 4px 15px #1f3b5b12}.stat b{font-size:1.65rem;display:block;color:var(--navy)}.stat span{font-size:.82rem;color:#66758a}
+    .tools{display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:1rem}.tools input{max-width:340px}.tools select{width:auto;min-width:155px}
+    .request { background:#fff;border-left:5px solid var(--blue);border-radius:8px;margin:.75rem 0;padding:1rem;box-shadow:0 3px 12px #1f3b5b10;display:grid;gap:.65rem}.request.high{border-left-color:var(--red)}.request-head{display:flex;justify-content:space-between;gap:1rem;align-items:start}.request h3{margin:0;font-size:1.05rem}.request p{margin:0;line-height:1.45}.meta{color:#64748b;font-size:.85rem}.badge{display:inline-block;border-radius:999px;padding:.25rem .6rem;background:#e6f2ff;color:#1261a8;font-size:.75rem;font-weight:800}.badge.high{background:#ffe5e7;color:#b32136}.status{display:flex;align-items:center;gap:.7rem;flex-wrap:wrap}.status select{width:auto;padding:.45rem;font-size:.88rem}.empty{padding:2rem;text-align:center;color:#66758a;background:#fff;border-radius:12px}
+    @media(max-width:620px){header{align-items:flex-start;flex-direction:column}.stats{grid-template-columns:repeat(2,1fr)}form{grid-template-columns:1fr}.full{grid-column:auto}.request-head{flex-direction:column;gap:.4rem}.tools input{max-width:none}.tools{display:grid;grid-template-columns:1fr}.tools select{width:100%}}
+  </style>
+</head>
+<body>
+  <header><div class="brand">ICT <span>Helpdesk</span></div><nav><button class="active" data-view="submit">Send Request</button><button data-view="dashboard">Technician Dashboard</button></nav></header>
+  <main>
+    <section id="submit" class="view active"><div class="intro"><h1>Need ICT support?</h1><p>Send your request and the ICT team will attend to it as soon as possible.</p></div>
+      <div class="panel"><form id="request-form">
+        <label>Employee name<input required name="name" placeholder="Your full name" /></label>
+        <label>Department<select required name="department"><option value="">Select department</option><option>ቢሮ ሀላፊ</option><option>ምክትል ቢሮ ሀላፊ</option><option>ፕላን</option><option>ሰው ሀብት</option><option>መዝገብ ቤት</option><option>የሰው ሀብት ክትትል መረጃ</option><option>ግዢ እና ፋይናንስ</option><option>ሪፎርም</option><option>ኦዲት</option><option>የህዝብ ግንኙነት</option><option>የውስጥ መልካም አስተዳደር</option><option>የውጭ መልካም አስተዳደር</option><option>ኢንስፔክሽን</option><option>አደረጃጀት</option><option>ሴቶች እና ህፃናት</option></select></label>
+        <label>Issue type<select required name="type"><option value="">Select issue</option><option>Network / Internet</option><option>Printer</option><option>Scanner</option><option>Computer / Laptop</option><option>Software / Email</option><option>Phone / Extension</option><option>Other</option></select></label>
+        <label>Priority<select required name="priority"><option>Normal</option><option>High</option><option>Urgent</option></select></label>
+        <label class="full">Describe the problem<textarea required name="details" placeholder="Example: Printer on the second floor shows an error and will not print."></textarea></label>
+        <div class="full"><button class="primary" type="submit">Send ICT Request</button></div><p id="confirmation" class="success full" aria-live="polite"></p>
+      </form></div>
+    </section>
+    <section id="dashboard" class="view"><div class="intro"><h1>Technician Dashboard</h1><p>Review requests, filter jobs, and update their status when you begin or complete work.</p></div>
+      <div class="stats"><div class="stat"><b id="total">0</b><span>Total requests</span></div><div class="stat"><b id="open">0</b><span>Open</span></div><div class="stat"><b id="progress">0</b><span>In progress</span></div><div class="stat"><b id="done">0</b><span>Completed</span></div></div>
+      <div class="tools"><input id="search" placeholder="Search name, department, or issue" /><select id="filter"><option value="All">All statuses</option><option>Open</option><option>In Progress</option><option>Completed</option></select></div><div id="requests"></div>
+    </section>
+  </main>
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbyk0Nc2U_UGxbfAKy1lyFxFvGTb3pF0cYXJEk5nTSYGLou38FlqcMaO2ZhRxYzdgc0/exec";
+
+    document.querySelectorAll('[data-view]').forEach(b => {
+      b.onclick = () => {
+        document.querySelectorAll('[data-view],.view').forEach(x => x.classList.remove('active'));
+        b.classList.add('active');
+        document.querySelector('#' + b.dataset.view).classList.add('active');
+        if (b.dataset.view === 'dashboard') render();
+      };
+    });
+
+    document.querySelector('#request-form').onsubmit = async e => {
+      e.preventDefault();
+
+      const form = e.target;
+      const confirmation = document.querySelector('#confirmation');
+      const d = Object.fromEntries(new FormData(form));
+
+      const request = {
+        id: Date.now(),
+        name: d.name,
+        department: d.department,
+        type: d.type,
+        priority: d.priority,
+        details: d.details,
+        status: "Open",
+        created: new Date().toLocaleString()
+      };
+
+      confirmation.textContent = "Sending request...";
+
+      try {
+        await fetch(API_URL, {
+          method: "POST",
+          mode: "no-cors",
+          body: JSON.stringify(request)
+        });
+
+        form.reset();
+        confirmation.textContent = "Request sent successfully. The ICT team has been notified.";
+      } catch (error) {
+        console.error(error);
+        confirmation.textContent = "Could not send the request. Please try again.";
+      }
+    };
+
+    async function render() {
+      const root = document.querySelector('#requests');
+      root.innerHTML = '<div class="empty">Loading requests...</div>';
+
+      try {
+        const response = await fetch(API_URL);
+        const all = await response.json();
+
+        const q = document.querySelector('#search').value.toLowerCase();
+        const f = document.querySelector('#filter').value;
+
+        document.querySelector('#total').textContent = all.length;
+        document.querySelector('#open').textContent = all.filter(x => x.status === 'Open').length;
+        document.querySelector('#progress').textContent = all.filter(x => x.status === 'In Progress').length;
+        document.querySelector('#done').textContent = all.filter(x => x.status === 'Completed').length;
+
+        const list = all
+          .filter(x => f === 'All' || x.status === f)
+          .filter(x => Object.values(x).join(' ').toLowerCase().includes(q));
+
+        root.innerHTML = list.length ? list.map(x => `
+          <article class="request ${x.priority === 'Urgent' || x.priority === 'High' ? 'high' : ''}">
+            <div class="request-head">
+              <div>
+                <h3>${escapeHtml(x.type)}
+                  <span class="badge ${x.priority === 'Urgent' || x.priority === 'High' ? 'high' : ''}">
+                    ${escapeHtml(x.priority)}
+                  </span>
+                </h3>
+                <div class="meta">${escapeHtml(x.name)} · ${escapeHtml(x.department)} · ${escapeHtml(x.created)}</div>
+              </div>
+            </div>
+            <p>${escapeHtml(x.details)}</p>
+            <div class="status">
+              <b>Status:</b>
+              <select onchange="changeStatus(${x.id}, this.value)">
+                <option ${x.status === 'Open' ? 'selected' : ''}>Open</option>
+                <option ${x.status === 'In Progress' ? 'selected' : ''}>In Progress</option>
+                <option ${x.status === 'Completed' ? 'selected' : ''}>Completed</option>
+              </select>
+            </div>
+          </article>
+        `).join('') : '<div class="empty">No requests match your filter.</div>';
+
+      } catch (error) {
+        console.error(error);
+        root.innerHTML = '<div class="empty">Could not load requests.</div>';
+      }
+    }
+
+    async function changeStatus(id, status) {
+      try {
+        await fetch(API_URL, {
+          method: "POST",
+          mode: "no-cors",
+          body: JSON.stringify({
+            action: "updateStatus",
+            id: id,
+            status: status
+          })
+        });
+
+        setTimeout(render, 800);
+      } catch (error) {
+        console.error(error);
+        alert("Could not update status.");
+      }
+    }
+
+    function escapeHtml(v) {
+      return String(v).replace(/[&<>'"]/g, c => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        "'": '&#39;',
+        '"': '&quot;'
+      }[c]));
+    }
+
+    window.changeStatus = changeStatus;
+    document.querySelector('#search').oninput = render;
+    document.querySelector('#filter').onchange = render;
+  </script>
+</body>
+</html>
